@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit and Save Text</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        #editable-text {
+            padding: 10px;
+            border: 1px solid #ccc;
+            min-height: 30px;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .edit-mode {
+            background-color: #e7f4ff;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Edit and Save Text</h2>
+
+    <div id="editable-text" contenteditable="false">
+        Click here to edit this text.
+    </div>
+
+    <button id="edit-btn" onclick="toggleEdit()">Edit Text</button>
+    <button onclick="saveText()">Save Text</button>
+
+    <script>
+        // Function to get cookie value
+        function getCookie(name) {
+            let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? match[2] : null;
+        }
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + "=" + value + ";expires=" + expires.toUTCString() + ";path=/";
+        }
+
+        // Load text from cookie on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            const savedText = getCookie('editableText');
+            if (savedText) {
+                document.getElementById('editable-text').innerText = savedText;
+            }
+        });
+
+        // Toggle the edit mode
+        function toggleEdit() {
+            const editableText = document.getElementById('editable-text');
+            const editBtn = document.getElementById('edit-btn');
+
+            if (editableText.isContentEditable) {
+                // If the text is currently editable, disable editing
+                editableText.contentEditable = "false";
+                editBtn.textContent = "Edit Text";
+            } else {
+                // If the text is not editable, enable editing
+                editableText.contentEditable = "true";
+                editableText.focus();  // Optionally focus on the text area when editing
+                editBtn.textContent = "Disable Edit";
+            }
+
+            // Optional: Add a background color to indicate edit mode
+            editableText.classList.toggle('edit-mode');
+        }
+
+        // Save the text in a cookie
+        function saveText() {
+            const text = document.getElementById('editable-text').innerText;
+            setCookie('editableText', text, 7);  // Save the text for 7 days
+            alert('Text has been saved in a cookie!');
+        }
+    </script>
+
+</body>
+</html>
